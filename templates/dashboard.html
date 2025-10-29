@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h2>Welcome to your Dashboard!</h2>
+<p>You are logged in </p>
+<button id="logoutBtn">Logout</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('access');
+    if (!token) {
+        window.location.href = '/';
+        return;
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        const refresh = localStorage.getItem('refresh');
+        const res = await fetch('/api/logout/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
+            body: JSON.stringify({refresh})
+        });
+        localStorage.removeItem('access');
+        localStorage.removeItem('refresh');
+        window.location.href = '/';
+    });
+});
+</script>
+{% endblock %}
